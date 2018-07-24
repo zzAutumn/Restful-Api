@@ -1,33 +1,41 @@
 const express = require('express')
 const router = express.Router()
-const Ninja = require('../models/ninja')
+const User = require('../models/ninja')
 
 // get a list of ninjas from the db
-router.get('/ninjas', function(req, res) {
-  res.send({
-    type: 'GET'
+router.get('/user', function(req, res, next) {
+  User.find({}, function (err, data) {
+    if (err) {
+      console.log(err)
+    }
+    res.send(data)
   })
 })
 
 //add a new ninja to the db
-router.post('/ninjas',function(req, res) {
-  Ninja.create(req.query).then(function (ninja) {
-    res.send(ninja)
-  })
+router.post('/user',function(req, res, next) {
+  User.create(req.query).then(function (user) {
+    res.send(user)
+  }).catch(next)
 })
 
 //update a new ninja to the db
-router.put('/ninjas/:id', function(req, res) {
-  res.send({
-    type: 'UPDATE'
-  })
+router.put('/user/:username', function(req, res, next) {
+  User.findOneAndUpdate({username: req.params.username}, req.query).then(function () {
+    User.findOne({username: req.params.username}).then(function (user) {
+      res.send(user)
+    })
+  }).catch(next)
 })
 
 //delete a new ninja to the db
-router.delete('/ninjas/:id', function(req, res) {
-  res.send({
-    type: 'DELETE'
-  })
+router.delete('/user/:username', function(req, res, next) {
+  User.deleteOne({username: req.params.username}).then(function (user) {
+    if (user.ok == 1) {
+      console.log('删除成功')
+    }
+    res.send(user)
+  }).catch(next)
 })
 
 module.exports = router

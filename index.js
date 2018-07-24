@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 const app = express()
 
 // connect to mongoDb
-mongoose.connect('mongodb://127.0.0.1:27017/ninja', { useNewUrlParser: true })
+mongoose.connect('mongodb://dds-8vb67d55bd7f8cb41776-pub.mongodb.zhangbei.rds.aliyuncs.com:3717/local',{authSource: 'admin', user: 'root' ,pass: 'PASS1234a', useNewUrlParser: true })
 mongoose.Promise = global.Promise
 
 // use body-parser middleware
@@ -17,6 +17,11 @@ app.use(bodyParser.json())
 // initialise routes
 app.use('/api', routes)
 
+// error handler
+app.use(function (err, req, res, next) {
+  console.log(err)
+  res.status(422).send({error: err.message})
+})
 app.get('/api', function(req, res) {
   res.send({name: 'tom'})
 })
