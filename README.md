@@ -9,3 +9,5 @@ It is application interface
 <p>jsonwebtoken: 用来生成我们的token</p>
 <p>passport: 非常流行的权限验证库</p>
 <p>bcrypt: 对用户密码进行hash加密</p>
+
+<h3>前端用vue-cli自动生成</h3>
