@@ -6,7 +6,10 @@ const User = require('../models/user')
 
 router.post('/signup', function (req, res) {
   if (!req.body.name || !req.body.password) {
-    res.json({message: 'please input your name and password'})
+    res.json({
+      success: false,
+      message: 'please input your name and password'
+    })
   } else {
     console.log(req.body)
     var newUser = new User({

@@ -15,18 +15,16 @@ mongoose.Promise = global.Promise
 app.use(express.json({type: 'application/json'}))
 app.use(express.urlencoded({ extended: true }))
 // initialise routes
+
+app.use('*',function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+  next()
+})
+
 app.use('/api', routes)
 app.use('/api', articleRoutes)
-
-// 路由中间件
-app.post('/book/:id',function (req, res, next) {
-  req.headers["content-type"] = "application/json, application/x-www-form-urlencoded"
-  console.log(req.headers)
-  next()
-}, function (req, res, next) {
-  console.log(req.body)
-  res.send(req.body)
-})
 
 
 // 命令行中显示程序运行日志,便于bug调试
@@ -42,7 +40,7 @@ app.use(function (err, req, res, next) {
 
 
 // listen for requests
-app.listen(process.env.port || 4000, function() {
-  console.log('now listening for requests on port 4000 ...')
+app.listen(process.env.port || 3000, function() {
+  console.log('now listening for requests on port 3000 ...')
 })
 

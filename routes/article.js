@@ -27,6 +27,10 @@ router.get('/article/viewAll', function (req, res, next) {
   })
 })
 
+router.get('/', function (req, res) {
+  console.log('get ////')
+  res.send(JSON.stringify({name: "tom"}))
+})
 
 
 module.exports = router
