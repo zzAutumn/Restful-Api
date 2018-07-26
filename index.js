@@ -1,5 +1,6 @@
 const express = require('express')
 const routes = require('./routes/user')
+const articleRoutes = require('./routes/article')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const passport = require('passport') //用户认证模块passport
@@ -15,6 +16,7 @@ app.use(express.json({type: 'application/json'}))
 app.use(express.urlencoded({ extended: true }))
 // initialise routes
 app.use('/api', routes)
+app.use('/api', articleRoutes)
 
 // 路由中间件
 app.post('/book/:id',function (req, res, next) {
