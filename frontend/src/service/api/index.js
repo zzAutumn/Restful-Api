@@ -1,6 +1,6 @@
 
 const Api = {
-  signup: '/signup'
+  signup: '/api/signup'
 }
 
 export default Api

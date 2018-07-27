@@ -3,14 +3,14 @@ const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
 
 const UserSchema = new Schema({
+  uid: {
+    type: Number
+  },
   name: {
     type: String,
-    unique: true, //不可重复约束
-    require: true //不可为空约束
   },
   password: {
     type: String,
-    require: true
   },
   token: {
     type: String
@@ -18,6 +18,7 @@ const UserSchema = new Schema({
 })
 
 // 添加用户保存时中间件对password进行bcrypt加密
+/*
 UserSchema.pre('save', function (next) {
   var user = this
   if (this.isModified('password') || this.isNew) {
@@ -48,7 +49,7 @@ UserSchema.methods.comparePassword = function(passw, cb) {
   });
 };
 
-
-const User = mongoose.model('users', UserSchema)
+*/
+const User = mongoose.model('user', UserSchema)
 
 module.exports = User

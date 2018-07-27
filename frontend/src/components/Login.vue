@@ -5,19 +5,19 @@
         <img :src="background" class="hello-img">
       </Col>
       <Col span="10" class="hello login-form">
-        <Form ref="logForm" :model="logForm" :rules="formRule" class="logForm">
+        <Form ref="logForm" :model="loginForm" :rules="formRule" class="logForm">
           <FormItem prop="name">
-            <Input type="text" v-model="logForm.name" placeholder="Username" class="w-200">
+            <Input type="text" v-model="loginForm.name" placeholder="Username" class="w-200">
               <Icon type="ios-person-outline" slot="prepend"></Icon>
             </Input>
           </FormItem>
           <FormItem prop="password">
-            <Input type="password" v-model="logForm.password" placeholder="Password" class="w-200">
+            <Input type="password" v-model="loginForm.password" placeholder="Password" class="w-200">
               <Icon type="ios-locked-outline" slot="prepend"></Icon>
             </Input>
           </FormItem>
           <FormItem>
-              <Button class="custom-btn" @click="handleSubmit('logForm')">Login</Button>
+              <Button class="custom-btn" @click="loginSubmit">Login</Button>
               <Button class="custom-btn" @click="signUp">Signup</Button>
           </FormItem>
         </Form>
@@ -27,45 +27,56 @@
     <!-- 注册modal -->
     <Modal
       v-model="signUpModal"
-      
     >
       <p slot="header" style="color:#f60;text-align:center">
           <Icon type="person-add"></Icon>
           <span>注册新用户</span>
       </p>
-      <Form ref="logForm" :model="logForm" :rules="signUpRule" class="signForm" label-position="left" :label-width="80">
+      <Form ref="signUpForm" :model="signUpForm" :rules="signUpRule" class="signForm" label-position="left" :label-width="80">
           <FormItem prop="name" label="Username">
-            <Input type="text" v-model="logForm.name" placeholder="Username" class="w-200">
+            <Input type="text" v-model="signUpForm.name" placeholder="Username" class="w-200">
               <Icon type="ios-person-outline" slot="prepend"></Icon>
             </Input>
           </FormItem>
           <FormItem prop="password" label="Password">
-            <Input type="password" v-model="logForm.password" placeholder="Password" class="w-200">
+            <Input type="password" v-model="signUpForm.password" placeholder="Password" class="w-200">
               <Icon type="ios-locked-outline" slot="prepend"></Icon>
             </Input>
           </FormItem>
           <FormItem prop="rePassword" label="Confirm Password">
-            <Input type="password" v-model="logForm.rePassword" placeholder="confirm Password" class="w-200">
+            <Input type="password" v-model="signUpForm.rePassword" placeholder="confirm Password" class="w-200">
               <Icon type="ios-locked-outline" slot="prepend"></Icon>
             </Input>
           </FormItem>
         </Form>
         <div slot="footer">
           <Button type="primary" @click="cancel">Cancel</Button>
-          <Button type="primary" @click="handleSubmit">SignUp</Button>
+          <Button type="primary" @click="signSubmit">SignUp</Button>
         </div>
     </Modal>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 import $http from '@/service'
 
 export default {
   name: 'Login',
   data () {
+    const checkpass = (rule, value, callback) => {
+      if (value !== this.signUpForm.password) {
+        callback(new Error('The two input passwords do not match!'))
+      } else {
+        callback()
+      }
+    }
     return {
-      logForm: {
+      loginForm: {
+        name: '',
+        password: '',
+      },
+      signUpForm: {
         name: '',
         password: '',
         rePassword: ''
@@ -78,7 +89,8 @@ export default {
           required: true
         },
         rePassword: {
-          required: true
+          required: true,
+          validator: checkpass
         }
       },
       formRule: {
@@ -94,31 +106,63 @@ export default {
     }
   },
   computed: {
-    background() {
+    background () {
       return require('@/assets/home.jpg')
     }
   },
   methods: {
     /**
-     * 登录 || 注册 提交
+     * 登录 提交
      */
-   async handleSubmit () {
-       const result = await this.$service.sign(this.logForm) 
-       console.log(result)      
+     async loginSubmit () {
+      const result = await this.$service.signUp(this.logForm)
+      console.log(result)
+      if (result.data.success) {
+        this.$Notice.success({
+          title: 'SignUp successfully'
+        })
+      } else {
+        this.$Notice.error({
+          title: 'SignUp failed'
+        })
+      }
+    },
+    /**
+     * 注册提交
+     */
+
+    signSubmit () {
+      this.$refs.signUpForm.validate( async (valid) => {
+        if (valid) {
+          const result = await this.$service.signUp(this.signUpForm)
+          console.log(result)
+          if (result.data.success) {
+            this.signUpModal = false
+            this.$Notice.success({
+              title: 'SignUp successfully'
+            })
+          } else {
+            this.$Notice.error({
+              title: 'SignUp failed'
+            })
+          }  
+        }
+      })
     },
 
     /**
      * 注册
      */
-    signUp() {
+    signUp () {
       this.signUpModal = true
     },
 
     /**
      * 注册取消
      */
-    cancel() {
-
+    cancel () {
+      this.$refs.signUpForm.resetFields()
+      this.signUpModal = false
     }
   }
 }

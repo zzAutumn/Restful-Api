@@ -1,17 +1,9 @@
-const $http = require('./axios/axios')
 import api from './api'
+import $http from './axios/axios'
 
 export default class Service {
-  async signUp(data) {
-    const result = $http.post(api.signup, data)
-    if (result.status == 200) {
-      this.$Notice.success({
-        title: 'SignUp successfully'
-      })
-    }else {
-      this.$Notice.error({
-        title: 'SignUp failed'
-      })
-    }
+  async signUp (data) {
+    const result = await $http.post(api.signup, data)
+    return result
   }
 }

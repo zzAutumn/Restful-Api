@@ -3,31 +3,35 @@ const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const router = express.Router()
 const User = require('../models/user')
+const assert = require('assert')
 
+/**
+ * 注册提交
+ */
 router.post('/signup', function (req, res) {
-  if (!req.body.name || !req.body.password) {
-    res.json({
-      success: false,
-      message: 'please input your name and password'
-    })
-  } else {
-    console.log(req.body)
-    var newUser = new User({
-      name: req.body.name,
-      password: req.body.password
-    }) 
-    // 保存用户
-    newUser.save(err => {
-      if (err) {
-        console.log(err)
-        res.json({success: false, message: 'signup failed!'})
-      } else {
-        res.json({success: true, message: 'signup successfully!'})
-      }
-    })
+  console.log(req.body)
+  var newUser = {
+    name: req.body.name,
+    password: req.body.password
   }
-
+  User.create(newUser, function (err, doc) {
+    if (err) {
+      res.send({
+        success: false,
+        message: '创建失败'
+      })
+    } else {
+      res.send({
+        success: true,
+        returnData: doc
+      })
+    }
+  })
 })
+
+/**
+ * 登录提交
+ */
 
 // 检查用户名与密码并生成一个accesstoken如果验证通过
 router.post('/user/accesstoken', (req, res) => {

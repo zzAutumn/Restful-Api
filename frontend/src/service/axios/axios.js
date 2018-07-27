@@ -8,17 +8,19 @@ var instance = axios.create({
   responseType: 'json'
 })
 
+const $http = {
+  async get (url, data = {}) {
+    const result = await instance.get(url, data)
+    if (result.status === 200) {
+      return result.data
+    }
+  },
 
-export default class $http {
-    async get(url, data = {}) {
-      const result = await instance.get(url, data)
-      if (result.status == 200 ) {
-        return result.data
-      }
-     }
-  
-     async post(url, data = {}) {
-       const result = await instance.post(url, data)
-        console.log(result)
-     }  
+  async post (url, data = {}) {
+    const result = await instance.post(url, data)
+    console.log(result)
+    return result
+  }
 }
+
+export default $http
