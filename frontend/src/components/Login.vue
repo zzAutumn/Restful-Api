@@ -5,7 +5,7 @@
         <img :src="background" class="hello-img">
       </Col>
       <Col span="10" class="hello login-form">
-        <Form ref="logForm" :model="loginForm" :rules="formRule" class="logForm">
+        <Form ref="loginForm" :model="loginForm" :rules="formRule" class="logForm">
           <FormItem prop="name">
             <Input type="text" v-model="loginForm.name" placeholder="Username" class="w-200">
               <Icon type="ios-person-outline" slot="prepend"></Icon>
@@ -114,18 +114,23 @@ export default {
     /**
      * 登录 提交
      */
-     async loginSubmit () {
-      const result = await this.$service.signUp(this.logForm)
-      console.log(result)
-      if (result.data.success) {
-        this.$Notice.success({
-          title: 'SignUp successfully'
-        })
-      } else {
-        this.$Notice.error({
-          title: 'SignUp failed'
-        })
-      }
+    loginSubmit () {
+      this.$refs.loginForm.validate( async (valid) => {
+        if (valid) {
+          const result = await this.$service.login(this.loginForm)
+          console.log(result)
+          if (result.data.success) {
+            this.$Notice.success({
+              title: 'Login successfully'
+            })
+            this.$router.push('/home')
+          } else {
+            this.$Notice.error({
+              title: 'Login failed'
+            })
+          }  
+        }
+      })
     },
     /**
      * 注册提交

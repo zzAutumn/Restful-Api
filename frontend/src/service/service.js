@@ -6,4 +6,9 @@ export default class Service {
     const result = await $http.post(api.signup, data)
     return result
   }
+
+  async login (data) {
+    const result = await $http.post(api.login, data)
+    return result
+  }
 }

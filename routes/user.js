@@ -32,7 +32,17 @@ router.post('/signup', function (req, res) {
 /**
  * 登录提交
  */
-
+router.post('/login', (req, res) => {
+  User.findOne({name: req.body.name, password: req.body.password}, (err, user) => {
+    if (err) {
+      throw err
+    }
+    if (!user) {
+      res.json({success: false, message: 'user does not exist!'})
+    }
+    res.json({success: true, message: 'login successfully!'})
+  })
+})
 // 检查用户名与密码并生成一个accesstoken如果验证通过
 router.post('/user/accesstoken', (req, res) => {
   User.findOne({

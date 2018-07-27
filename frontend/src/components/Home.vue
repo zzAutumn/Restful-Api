@@ -7,7 +7,7 @@
 <script>
 
 export default {
-  name: 'HelloWorld',
+  name: 'Home',
   data () {
     return {
       msg: 'Welcome to Your Blog'
@@ -18,10 +18,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1{
   font-weight: normal;
-}
-a {
-  color: #42b983;
 }
 </style>
